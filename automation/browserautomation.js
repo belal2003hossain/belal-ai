@@ -1,0 +1,1 @@
+console.log("Browser automation module ready. Future automation code will go here.");

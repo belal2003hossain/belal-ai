@@ -1,0 +1,1 @@
+console.log("Telegram bot module ready. Future Telegram bot code will go here.");

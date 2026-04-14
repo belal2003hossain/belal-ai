@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BELAL AI Tasks</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .box {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 70%;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    li {
+      margin-top: 8px;
+    }
+
+    a {
+      margin-right: 12px;
+      text-decoration: none;
+      color: #0b57d0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tasks ✅</h1>
+
+  <p>
+    <a href="index.html">Chat</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="notes.html">Notes</a>
+    <a href="login.html">Login</a>
+  </p>
+
+  <div class="box">
+    <input id="taskInput" type="text" placeholder="Write a task">
+    <button id="addTaskBtn">Add Task</button>
+    <ul id="tasksList"></ul>
+  </div>
+
+  <script>
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem("belal_tasks") || "[]");
+      const list = document.getElementById("tasksList");
+      list.innerHTML = "";
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${task} <button onclick="deleteTask(${index})">Delete</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    function deleteTask(index) {
+      const tasks = JSON.parse(localStorage.getItem("belal_tasks") || "[]");
+      tasks.splice(index, 1);
+      localStorage.setItem("belal_tasks", JSON.stringify(tasks));
+      loadTasks();
+    }
+
+    document.getElementById("addTaskBtn").addEventListener("click", function () {
+      const input = document.getElementById("taskInput");
+      const value = input.value.trim();
+
+      if (!value) return;
+
+      const tasks = JSON.parse(localStorage.getItem("belal_tasks") || "[]");
+      tasks.push(value);
+      localStorage.setItem("belal_tasks", JSON.stringify(tasks));
+      input.value = "";
+      loadTasks();
+    });
+
+    loadTasks();
+  </script>
+
+</body>
+</html>

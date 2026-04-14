@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BELAL AI Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .card {
+      background: white;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    a {
+      margin-right: 12px;
+      text-decoration: none;
+      color: #0b57d0;
+      font-weight: bold;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard 📊</h1>
+
+  <p>
+    <a href="index.html">Chat</a>
+    <a href="notes.html">Notes</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="login.html">Login</a>
+  </p>
+
+  <div class="card">
+    <h3>Saved Memory</h3>
+    <pre id="memoryBox">Loading...</pre>
+  </div>
+
+  <div class="card">
+    <h3>Quick Status</h3>
+    <p id="statusBox">Checking...</p>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      const memoryBox = document.getElementById("memoryBox");
+      const statusBox = document.getElementById("statusBox");
+
+      try {
+        const response = await fetch("http://localhost:5000/memory");
+        const data = await response.json();
+
+        memoryBox.innerText =
+          "Name: " + (data.name || "Not set") + "\n" +
+          "Goal: " + (data.goal || "Not set") + "\n" +
+          "Work: " + (data.work || "Not set") + "\n" +
+          "Notes: " + (data.notes && data.notes.length ? data.notes.join(", ") : "No notes");
+
+        const localNotes = JSON.parse(localStorage.getItem("belal_notes") || "[]");
+        const localTasks = JSON.parse(localStorage.getItem("belal_tasks") || "[]");
+
+        statusBox.innerText =
+          "Backend connected ✅ | Local notes: " + localNotes.length + " | Local tasks: " + localTasks.length;
+      } catch (error) {
+        memoryBox.innerText = "Backend memory load hoy nai 😥";
+        statusBox.innerText = "Backend disconnected ❌";
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

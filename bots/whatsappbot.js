@@ -1,0 +1,1 @@
+console.log("WhatsApp bot module ready. Future WhatsApp bot code will go here.");

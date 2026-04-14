@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BELAL AI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #111827;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #0b57d0;
+      font-weight: bold;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .logout-btn {
+      border: none;
+      background: #ef4444;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+    }
+
+    .sidebar,
+    .chat-panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .sidebar {
+      padding: 16px;
+      height: fit-content;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .feature-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .feature-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 78vh;
+    }
+
+    .chat-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chat-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-actions button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .clear-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .speak-toggle-btn {
+      background: #111827;
+      color: white;
+    }
+
+    .stop-voice-btn {
+      background: #6b7280;
+      color: white;
+    }
+
+    .chat-history {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      background: #fbfcfe;
+    }
+
+    .message-row {
+      display: flex;
+      margin-bottom: 14px;
+    }
+
+    .message-row.user {
+      justify-content: flex-end;
+    }
+
+    .message-row.ai {
+      justify-content: flex-start;
+    }
+
+    .message {
+      max-width: 78%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 15px;
+    }
+
+    .message.user {
+      background: #dbeafe;
+      color: #111827;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai {
+      background: #eceff3;
+      color: #111827;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-meta {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .typing {
+      font-style: italic;
+      color: #6b7280;
+      padding: 0 18px 12px;
+    }
+
+    .input-area {
+      border-top: 1px solid #e5e7eb;
+      padding: 16px;
+      background: white;
+    }
+
+    .input-controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-controls input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .send-btn,
+    .mic-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .send-btn {
+      background: #0b57d0;
+      color: white;
+    }
+
+    .mic-btn {
+      background: #10b981;
+      color: white;
+    }
+
+    .mic-btn.listening {
+      background: #f59e0b;
+    }
+
+    .bottom-info {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-panel {
+        min-height: 72vh;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .input-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .message {
+        max-width: 100%;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">BELAL AI 🤖</div>
+
+      <div class="nav">
+        <a href="index.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="notes.html">Notes</a>
+        <a href="tasks.html">Tasks</a>
+        <a href="login.html">Login</a>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h3>Current User</h3>
+
+        <div class="feature-box">
+          <strong id="userBox">Loading...</strong>
+          Logged in user er chat alada thakbe.
+        </div>
+
+        <div class="feature-box">
+          <strong>Features</strong>
+          AI chat, voice, smart memory, DB history, user-wise login.
+        </div>
+      </aside>
+
+      <section class="chat-panel">
+        <div class="chat-header">
+          <h2>Chat with BELAL AI</h2>
+
+          <div class="header-actions">
+            <button class="speak-toggle-btn" id="speakToggleBtn">Voice Reply: ON</button>
+            <button class="stop-voice-btn" id="stopVoiceBtn">Stop Voice</button>
+            <button class="clear-btn" id="clearBtn">Clear Chat</button>
+          </div>
+        </div>
+
+        <div id="chatHistory" class="chat-history"></div>
+        <div id="typingStatus" class="typing"></div>
+
+        <div class="input-area">
+          <div class="input-controls">
+            <input id="messageInput" type="text" placeholder="Type message here..." />
+            <button class="send-btn" id="sendBtn">Send</button>
+            <button class="mic-btn" id="micBtn">Mic</button>
+          </div>
+
+          <div class="bottom-info">
+            <span id="voiceStatus">Voice ready</span>
+            <span>Press Enter to send</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const loggedUser = localStorage.getItem("belal_logged_user");
+
+    if (!loggedUser) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("userBox").innerText = loggedUser || "No user";
+
+    const chatHistoryBox = document.getElementById("chatHistory");
+    const typingStatus = document.getElementById("typingStatus");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const speakToggleBtn = document.getElementById("speakToggleBtn");
+    const stopVoiceBtn = document.getElementById("stopVoiceBtn");
+    const voiceStatus = document.getElementById("voiceStatus");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    let voiceReplyEnabled = true;
+    let recognition = null;
+    let isListening = false;
+
+    function formatTime(timeValue) {
+      if (!timeValue) return "";
+      const date = new Date(timeValue);
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function addMessageToUI(role, text, time) {
+      const row = document.createElement("div");
+      row.className = `message-row ${role}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = `message ${role}`;
+
+      const content = document.createElement("div");
+      content.innerText = text;
+
+      const meta = document.createElement("div");
+      meta.className = "message-meta";
+      meta.innerText = `${role === "user" ? "You" : "BELAL AI"}${time ? " • " + formatTime(time) : ""}`;
+
+      bubble.appendChild(content);
+      bubble.appendChild(meta);
+      row.appendChild(bubble);
+      chatHistoryBox.appendChild(row);
+      chatHistoryBox.scrollTop = chatHistoryBox.scrollHeight;
+    }
+
+    async function loadHistory() {
+      chatHistoryBox.innerHTML = "";
+
+      try {
+        const response = await fetch("http://localhost:5000/history", {
+          headers: {
+            "x-user": loggedUser
+          }
+        });
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          addMessageToUI("ai", "BELAL AI ready 🙂", new Date());
+          return;
+        }
+
+        data.forEach(item => {
+          addMessageToUI(item.role, item.text, item.time);
+        });
+      } catch (error) {
+        addMessageToUI("ai", "History load hoy nai 😥", new Date());
+      }
+    }
+
+    function speakText(text) {
+      if (!voiceReplyEnabled) return;
+      if (!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    async function sendMessage() {
+      const message = messageInput.value.trim();
+
+      if (!message) {
+        typingStatus.innerText = "Kisu likho boss 🙂";
+        return;
+      }
+
+      addMessageToUI("user", message, new Date());
+      messageInput.value = "";
+      typingStatus.innerText = "BELAL AI is typing... ⏳";
+
+      try {
+        const response = await fetch("http://localhost:5000/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user": loggedUser
+          },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        typingStatus.innerText = "";
+
+        const reply = data.reply || "Reply pai nai 😥";
+        addMessageToUI("ai", reply, new Date());
+        speakText(reply);
+      } catch (error) {
+        typingStatus.innerText = "";
+        addMessageToUI("ai", "Server connection problem 😥", new Date());
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    messageInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    clearBtn.addEventListener("click", async function () {
+      try {
+        await fetch("http://localhost:5000/clear-history", {
+          method: "DELETE",
+          headers: {
+            "x-user": loggedUser
+          }
+        });
+
+        chatHistoryBox.innerHTML = "";
+        typingStatus.innerText = "";
+        loadHistory();
+      } catch (error) {
+        typingStatus.innerText = "Clear korte problem hoise 😥";
+      }
+    });
+
+    logoutBtn.addEventListener("click", function () {
+      localStorage.removeItem("belal_logged_user");
+      window.location.href = "login.html";
+    });
+
+    speakToggleBtn.addEventListener("click", function () {
+      voiceReplyEnabled = !voiceReplyEnabled;
+      speakToggleBtn.innerText = `Voice Reply: ${voiceReplyEnabled ? "ON" : "OFF"}`;
+    });
+
+    stopVoiceBtn.addEventListener("click", function () {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    });
+
+    function setupVoiceInput() {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        voiceStatus.innerText = "Voice input not supported in this browser";
+        micBtn.disabled = true;
+        micBtn.innerText = "Mic NA";
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      micBtn.addEventListener("click", function () {
+        if (!isListening) {
+          recognition.start();
+        } else {
+          recognition.stop();
+        }
+      });
+
+      recognition.onstart = function () {
+        isListening = true;
+        micBtn.classList.add("listening");
+        micBtn.innerText = "Listening...";
+        voiceStatus.innerText = "Mic listening...";
+      };
+
+      recognition.onend = function () {
+        isListening = false;
+        micBtn.classList.remove("listening");
+        micBtn.innerText = "Mic";
+        voiceStatus.innerText = "Voice ready";
+      };
+
+      recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        messageInput.value = transcript;
+      };
+
+      recognition.onerror = function () {
+        isListening = false;
+        micBtn.classList.remove("listening");
+        micBtn.innerText = "Mic";
+        voiceStatus.innerText = "Voice input error";
+      };
+    }
+
+    loadHistory();
+    setupVoiceInput();
+  </script>
+</body>
+</html>
