@@ -80,7 +80,7 @@ function withTimeout(promise, ms) {
   return Promise.race([
     promise,
     new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request timeout"));
+      setTimeout(() => reject(new Error("Request timeout")), ms);
     })
   ]);
 }
@@ -245,17 +245,10 @@ function trySaveMemoryFromMessage(memory, message) {
   return { saved: true, reply };
 }
 
-/* ---------- IMPORTANT ROUTES ---------- */
+/* -------------------- FRONTEND ROUTES -------------------- */
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "index.html"));
-});
-
-app.get("/api", (req, res) => {
-  res.json({
-    success: true,
-    message: "Belal AI API running 🚀"
-  });
 });
 
 app.get("/login", (req, res) => {
@@ -274,7 +267,14 @@ app.get("/tasks", (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "tasks.html"));
 });
 
-/* ---------- AUTH ---------- */
+app.get("/api", (req, res) => {
+  res.json({
+    success: true,
+    message: "Belal AI API running 🚀"
+  });
+});
+
+/* -------------------- AUTH ROUTES -------------------- */
 
 app.post("/register", async (req, res) => {
   try {
@@ -382,7 +382,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-/* ---------- CHAT HISTORY ---------- */
+/* -------------------- HISTORY ROUTES -------------------- */
 
 app.get("/history", async (req, res) => {
   try {
@@ -427,7 +427,7 @@ app.delete("/clear-history", async (req, res) => {
   }
 });
 
-/* ---------- CHAT ---------- */
+/* -------------------- CHAT ROUTE -------------------- */
 
 app.post("/chat", async (req, res) => {
   try {
@@ -466,9 +466,8 @@ app.post("/chat", async (req, res) => {
             role: "system",
             content: `You are BELAL AI.
 Reply in a natural Bangla-English mix.
-Be smart, friendly, helpful, confident, and practical.
-Keep answers clear.
-If the user asks something personal, use saved memory when relevant.
+Be smart, friendly, helpful, and practical.
+Use saved memory when relevant.
 
 Saved User Memory:
 ${memoryText}`
@@ -500,13 +499,13 @@ ${memoryText}`
   }
 });
 
-/* ---------- 404 ---------- */
+/* -------------------- 404 ROUTE -------------------- */
 
 app.use((req, res) => {
   res.status(404).send("Page not found ❌");
 });
 
-/* ---------- BOOT ---------- */
+/* -------------------- SERVER BOOT -------------------- */
 
 async function bootServer() {
   ensureDir(DATA_PATH);
