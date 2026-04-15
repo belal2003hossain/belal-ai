@@ -80,7 +80,7 @@ function withTimeout(promise, ms) {
   return Promise.race([
     promise,
     new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request timeout")), ms);
+      setTimeout(() => reject(new Error("Request timeout"));
     })
   ]);
 }
@@ -245,8 +245,17 @@ function trySaveMemoryFromMessage(memory, message) {
   return { saved: true, reply };
 }
 
+/* ---------- IMPORTANT ROUTES ---------- */
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "index.html"));
+});
+
+app.get("/api", (req, res) => {
+  res.json({
+    success: true,
+    message: "Belal AI API running 🚀"
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -264,6 +273,8 @@ app.get("/notes", (req, res) => {
 app.get("/tasks", (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "tasks.html"));
 });
+
+/* ---------- AUTH ---------- */
 
 app.post("/register", async (req, res) => {
   try {
@@ -371,6 +382,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
+/* ---------- CHAT HISTORY ---------- */
+
 app.get("/history", async (req, res) => {
   try {
     const username = getCurrentUser(req);
@@ -413,6 +426,8 @@ app.delete("/clear-history", async (req, res) => {
     return res.json({ success: false });
   }
 });
+
+/* ---------- CHAT ---------- */
 
 app.post("/chat", async (req, res) => {
   try {
@@ -485,9 +500,13 @@ ${memoryText}`
   }
 });
 
+/* ---------- 404 ---------- */
+
 app.use((req, res) => {
   res.status(404).send("Page not found ❌");
 });
+
+/* ---------- BOOT ---------- */
 
 async function bootServer() {
   ensureDir(DATA_PATH);
